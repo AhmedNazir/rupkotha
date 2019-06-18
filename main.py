@@ -6,7 +6,7 @@ from Finish import finish
 
 def main():
 
-    file = 'cheleta'
+    file = 'sample'
     project_number = 2
     projectName = 'project' + str(project_number).zfill(3)
 
