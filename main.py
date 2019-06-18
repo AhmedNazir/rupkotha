@@ -6,8 +6,8 @@ from Finish import finish
 
 def main():
 
-    file = 'sample'
-    project_number = 2
+    file = 'cheleta.pdf'
+    project_number = 6
     projectName = 'project' + str(project_number).zfill(3)
 
     # clear combined OCR file .........
@@ -17,8 +17,8 @@ def main():
     split(path=file, projectName=projectName)
 
     # Starting and Ending page number.....
-    start = 26
-    stop = 30
+    start = 31
+    stop = 35
 
 
     total_page = getPageNumber(file)
