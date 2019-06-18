@@ -1,29 +1,39 @@
-def finish(project =''):
-    
-    with open(project+'//'+project+'.txt',encoding='utf-8') as fr:
-        data = fr.read()
-        data = data.replace('া ে','ো')
-        data = data.replace('|','')
-        # data = data.replace('﻿________________','') 
+import os
 
-        with open(project+'//'+project+'filter.txt','w',encoding='utf-8') as fw:
-            for line in data.split('\n') :
-                fw.write(line.strip())
-                fw.write('\n')
+def finish(project=''):
 
-    with open(project+'//'+project+'filter.txt',encoding='utf-8') as fr:
-        with open(project+'//'+project+'.html','w',encoding='utf-8') as fw:
+    data = ''
+    list = os.listdir(project+"//output//")
+    for path in list:
+        file = open(project+"//output//"+path, encoding='utf-8')
+        data = data + file.read()
+        file.close()
+
+    with open(project+'//'+project+'.txt', 'w', encoding='utf-8') as fw:
+        fw.write(data)
+
+    data = filter(data)
+    with open(project+'//'+project+'_filter.txt', 'w', encoding='utf-8') as fw:
+        for line in data.split('\n'):
+            fw.write(line.strip())
+            fw.write('\n')
+
+    with open(project+'//'+project+'_filter.txt', encoding='utf-8') as fr:
+        with open(project+'//'+project+'.html', 'w', encoding='utf-8') as fw:
+            fw.write('<p>')
             for line in fr.readlines():
                 if line != '\n':
-                    # fw.write('<p>'+line+'</p>\n<br/>\n')
 
-                    if line[-2] in '।?"”': # line[-1] == '\n'
-                        fw.write(line+'</p>\n<br/>\n'+'<p>')
+                    if line[-2] in '।!?"”': 
+                        fw.write(line[:-1]+'</p>\n<br/>\n'+'<p>')   # line[-1] = '\n'
                     else:
                         fw.write(line)
 
-def clear(project = ''):
-    open(project+'//'+project+'.txt','w',encoding='utf-8').close()
-    open(project+'//'+project+'_filter.txt','w',encoding='utf-8').close()
-    open(project+'//'+project+'.html','w',encoding='utf-8').close()
 
+def filter(data):
+    data = data.replace('াে', 'ো')
+    data = data.replace('|', '')
+    data = data.replace('।।', '।')
+    data = data.replace('েে', 'ে')
+
+    return data

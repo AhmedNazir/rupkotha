@@ -1,25 +1,42 @@
+from init import getService, clear
 from Ocr import ocr
-from Split import split
-from Finish import finish,clear
+from Split import split,getPageNumber
+from Finish import finish
+
 
 def main():
 
-    file= 'sample'
-    project_number = 1
-    pdfname= 'project' + str(project_number).zfill(3)
+    file = 'cheleta'
+    project_number = 2
+    projectName = 'project' + str(project_number).zfill(3)
 
-    # clear(pdfname) # clear ...............
+    # clear combined OCR file .........
+    clear(projectName)
 
-    total_page = split(path =file,name=pdfname)
+    # spliting PDF .........
+    split(path=file, projectName=projectName)
 
-    start = 1
-    stop =5 # total_page
+    # Starting and Ending page number.....
+    start = 26
+    stop = 30
 
-    folder = pdfname+'\\'
-    for i in range(start,stop):
-        name =pdfname+str(i).zfill(3)+'.pdf'
-        # ocr(name,folder,pdfname)
 
-    finish(pdfname)
+    total_page = getPageNumber(file)
+    if start > total_page or stop > total_page or start > stop:
+        if start > stop:
+            print('please check starting and ending page number !!!')
+        else:
+            print('out of pages!!!')
+        exit(0)
+
+    service = getService()
+    for i in range(start, stop+1):
+        pdf = projectName+str(i).zfill(3)+'.pdf'
+
+        # OCR function.....
+        ocr(service, pdf, projectName)
+
+    # combinding all output....
+    finish(projectName)
 
 main()
