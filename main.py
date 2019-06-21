@@ -9,8 +9,7 @@ import time
 
 def main():
 
-    # file = 'Himadrikishor Dasgupta - Adventure Samagra.pdf'
-    file = 'Tenida Samogro.pdf'
+    file = 'sample.pdf'
 
     project_number = 5
     projectName = 'project' + str(project_number).zfill(3)
