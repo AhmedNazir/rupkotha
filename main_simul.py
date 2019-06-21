@@ -19,7 +19,7 @@ def workplace(service,pages, projectName):
 
 def main():
 
-    file = 'nikhoj.pdf'
+    file = 'sample.pdf'
 
     project_number = 7
     projectName = 'project' + str(project_number).zfill(3)
@@ -44,7 +44,7 @@ def main():
         exit(0)
 
 
-    worker = 7 # max = 7
+    worker = 7 # max = 10
 
     t = time.time()
     q = []
