@@ -21,6 +21,9 @@ def splitPDF(path='', projectName="", password=""):
 
     pdf.save(projectName + '/' + projectName + '.pdf')
 
+    print("split DONE!!!")
+
+
 def splitImage(path='', projectName="", password=""):
     print('Image Splitter Coming Soon... ')
 

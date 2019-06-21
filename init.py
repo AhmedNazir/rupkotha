@@ -8,19 +8,8 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-try:
-    import argparse
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-except ImportError:
-    flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-SCOPES = 'https://www.googleapis.com/auth/drive'
-CLIENT_SECRET_FILE = 'private/client_secrets.json'
-APPLICATION_NAME = 'Project Rupkotha'
-
-
-def get_credentials():
+def get_credentials(ID = 1):
     """Gets valid user credentials from storage.
 
     If nothing has been stored, or if the stored credentials are invalid,
@@ -29,7 +18,23 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    credential_path = os.path.join("private/", 'credentials.json')
+    
+    try:
+        import argparse
+        flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+    except ImportError:
+        flags = None
+
+
+    # If modifying these scopes, delete your previously saved credentials
+    SCOPES = 'https://www.googleapis.com/auth/drive'
+    CLIENT_SECRET_FILE = f'private/client_secrets-{ID}.json'
+    APPLICATION_NAME = 'Project Rupkotha'
+
+
+
+
+    credential_path = os.path.join("private/", f'credentials-{ID}.json')
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
@@ -43,8 +48,8 @@ def get_credentials():
     return credentials
 
 
-def getService():
-    credentials = get_credentials()
+def getService(ID = 1):
+    credentials = get_credentials(ID)
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
 

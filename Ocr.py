@@ -1,8 +1,10 @@
 import io
+import time
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 def ocr(service,inputFile = 'sample.png',projectName =''):
     # Image with texts (png, jpg, bmp, gif, pdf)
+    t =time.time()
 
     inputFilepath =projectName +'\\'+'input'+'\\' + inputFile
     outputFilePath = projectName + '//'+'output' + '//'+ inputFile[:-4] +'.txt'  # Text file outputted by OCR
@@ -26,4 +28,4 @@ def ocr(service,inputFile = 'sample.png',projectName =''):
         status, done = downloader.next_chunk()
 
     service.files().delete(fileId=res['id']).execute()
-    print(inputFile +' '+ str(status))
+    print(inputFile + ' ' + str(time.time() - t ))
