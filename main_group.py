@@ -9,7 +9,7 @@ import time
 
 def main():
 
-    file = 'nikhoj.pdf'
+    file = 'sample.pdf'
 
     project_number = 6
     projectName = 'project' + str(project_number).zfill(3)
@@ -34,7 +34,7 @@ def main():
         exit(0)
 
 
-    worker = 7 # max = 7
+    worker = 7 # max = 10
     service = []
     for i in range(worker):
         service.append(getService(ID=i))
