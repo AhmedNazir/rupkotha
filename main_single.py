@@ -1,7 +1,7 @@
 from init import getService, clear
 from Ocr import ocr
 from Split import split, getPageNumber
-from Finish import finish, filterData
+from Finish import finish, filterData, check, store
 
 import threading
 import time
@@ -9,9 +9,9 @@ import time
 
 def main():
 
-    file = 'nikhoj.pdf'
+    file = 'sample.pdf'
 
-    project_number = 8
+    project_number = 1
     projectName = 'project' + str(project_number).zfill(3)
 
     # clear combined OCR file .........
@@ -23,8 +23,8 @@ def main():
     total_page = getPageNumber(file)
 
     # Starting and Ending page number.....
-    start = 25
-    stop = 50
+    start = 1
+    stop = total_page
 
     if start > total_page or stop > total_page or start > stop:
         if start > stop:
@@ -44,9 +44,10 @@ def main():
 
     print(f"done in : {time.time()-t}\n")
 
-    # combinding all output....
+    check(total_page, getService(), projectName)
     finish(projectName)
-
     filterData(projectName)
+    store(projectName)
+
 
 main()

@@ -1,14 +1,13 @@
 from init import getService, clear
 from Ocr import ocr
 from Split import split, getPageNumber
-from Finish import finish, filterData
+from Finish import finish, filterData, check, store
 
 import threading
 import time
 
 
-
-def workplace(service,pages, projectName):
+def workplace(service, pages, projectName):
     for page in pages:
         pdf = projectName+str(page).zfill(3)+'.pdf'
 
@@ -16,12 +15,11 @@ def workplace(service,pages, projectName):
         ocr(service, pdf, projectName)
 
 
-
 def main():
 
-    file = 'sample.pdf'
+    file = "sample.pdf"
 
-    project_number = 7
+    project_number = 1
     projectName = 'project' + str(project_number).zfill(3)
 
     # clear combined OCR file .........
@@ -33,8 +31,8 @@ def main():
     total_page = getPageNumber(file)
 
     # Starting and Ending page number.....
-    start = 25
-    stop = 50
+    start = 1
+    stop = total_page
 
     if start > total_page or stop > total_page or start > stop:
         if start > stop:
@@ -43,13 +41,13 @@ def main():
             print('out of pages!!!')
         exit(0)
 
-
-    worker = 7 # max = 10
+    # '''
+    worker = 10  # max = 10
 
     t = time.time()
     q = []
     for i in range(worker):
-        q.append(list(range(start+i,stop+1,worker)))
+        q.append(list(range(start+i, stop+1, worker)))
 
     service = []
     for i in range(worker):
@@ -57,7 +55,8 @@ def main():
 
     th = []
     for i in range(worker):
-        temp = threading.Thread( target=workplace, args=(service[i], q[i], projectName,))
+        temp = threading.Thread(target=workplace, args=(
+            service[i], q[i], projectName,))
         th.append(temp)
 
     for i in range(worker):
@@ -68,9 +67,13 @@ def main():
 
     print(f"done in : {time.time()-t}\n")
 
-    # combinding all output....
-    finish(projectName)
+    # '''
 
+    # combinding all output....
+    check(total_page, getService(), projectName)
+    finish(projectName)
     filterData(projectName)
+    store(projectName)
+
 
 main()
