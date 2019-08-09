@@ -1,32 +1,28 @@
 from init import getService, clear
 from Ocr import ocr
-from Split import split, getPageNumber
-from Finish import finish, filterData, check, store
-
+from Split import split, getPageNumber,splitImage,renamePage
+from Finish import finish, filterData, check, store,remove,storeLinear
 import threading
 import time
 
 
-def workplace(service, pages, projectName):
+def workplace(service, pages, bookName):
     for page in pages:
-        pdf = projectName+str(page).zfill(3)+'.pdf'
+        pdf = str(1000 + page)+'.pdf'
 
         # OCR function.....
-        ocr(service, pdf, projectName)
+        ocr(service, pdf, bookName)
 
 
-def main():
-
-    file = "sample.pdf"
-
-    project_number = 1
-    projectName = 'project' + str(project_number).zfill(3)
+def main(file='', bookID=0):
+    bookName = str(10000 + bookID)
 
     # clear combined OCR file .........
-    clear(projectName)
+    clear(bookName)
 
     # spliting PDF .........
-    split(path=file, projectName=projectName)
+    split(file, bookName)
+    splitImage(file,bookName)
 
     total_page = getPageNumber(file)
 
@@ -56,7 +52,7 @@ def main():
     th = []
     for i in range(worker):
         temp = threading.Thread(target=workplace, args=(
-            service[i], q[i], projectName,))
+            service[i], q[i], bookName,))
         th.append(temp)
 
     for i in range(worker):
@@ -70,10 +66,17 @@ def main():
     # '''
 
     # combinding all output....
-    check(total_page, getService(), projectName)
-    finish(projectName)
-    filterData(projectName)
-    store(projectName)
+    check(total_page, getService(), bookName)
+    finish(bookName)
+    renamePage(bookName)
+    filterData(bookName)
+    store(bookName,title,writer)
+    remove('book\\'+bookName)
+
+bookID = 3
+file = 'sample.pdf'
+title = "অ্যাডভেঞ্চার সমগ্র"
+writer = "হিমাদ্রি কিশোর দাশগুপ্ত"
 
 
-main()
+main(file, bookID)

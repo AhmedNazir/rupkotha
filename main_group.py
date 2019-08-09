@@ -1,7 +1,7 @@
 from init import getService, clear
 from Ocr import ocr
-from Split import split, getPageNumber
-from Finish import finish, filterData, check, store
+from Split import split, getPageNumber,splitImage,renamePage
+from Finish import finish, filterData, check, store,remove
 
 import threading
 import time
@@ -9,16 +9,18 @@ import time
 
 def main():
 
-    file = 'sample.pdf'
+    file = 'Vol-30.pdf'
 
-    project_number = 1
-    projectName = 'project' + str(project_number).zfill(3)
+    bookID = 11
 
+    bookName = str(10000+bookID)
     # clear combined OCR file .........
-    clear(projectName)
+    clear(bookName)
 
     # spliting PDF .........
-    split(path=file, projectName=projectName)
+    split(file,bookName)
+    splitImage(file,bookName)
+
 
     total_page = getPageNumber(file)
 
@@ -44,13 +46,13 @@ def main():
         tt = time.time()
         pdf = []
         for j in range(worker):
-            temp = projectName+str(i+j).zfill(3)+'.pdf'
+            temp = str(1000 + j)+'.pdf'
             pdf.append(temp)
 
         th = []
         for j in range(worker):
             temp = threading.Thread(target=ocr, args=(
-                service[j], pdf[j], projectName,))
+                service[j], pdf[j], bookName,))
             th.append(temp)
 
         for j in range(worker):
@@ -65,10 +67,13 @@ def main():
     # '''
 
     # combinding all output....
-    check(total_page, getService(), projectName)
-    finish(projectName)
-    filterData(projectName)
-    store(projectName)
+    check(total_page, getService(), bookName)
+    renamePage(bookName)
+    finish(bookName)
+    filterData(bookName)
+    store(bookName,title,writer)
+    remove(bookName)
 
-
+title = "abc"
+writer = "xyz"
 main()

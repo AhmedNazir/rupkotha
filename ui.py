@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import pyrebase
+from database import database 
 
-project = 30
-book = "project"+str(project).zfill(3)
-page =''
+bookID = 11
+
+book = str(10000+bookID)
+page ='240'
 version = 1
 i = 1
 volunteer = ''
@@ -13,30 +15,20 @@ volunteer_new = 'Ahmed Nazir'
 
 txt = ''
 
-config = {
-  'apiKey': "AIzaSyB0wL9XVyyRrz6RGxA6SM4ycnZTrxLnFe0",
-  'authDomain': "test-74097.firebaseapp.com",
-  'databaseURL': "https://test-74097.firebaseio.com",
-  'projectId': "test-74097",
-  'storageBucket': "test-74097.appspot.com",
-  'messagingSenderId': "271652598314",
-  'appId': "1:271652598314:web:e7e3027f4bc9d8d1"
-}
-
-firebase = pyrebase.initialize_app(config)
-db = firebase.database()
+db = database()
 
 def load(i):
     global book,page,version, volunteer,txt
     if i>0:
-        page = db.child('book').child(book).child('final').child(book+str(i).zfill(3)).get().key()
-        version = db.child('book').child(book).child('final').child(book+str(i).zfill(3)).child('version').get().val()
-        volunteer = db.child('book').child(book).child('final').child(book+str(i).zfill(3)).child('volunteer').get().val()
-        temp = db.child('book').child(book).child('final').child(book+str(i).zfill(3)).child('data').get().val()
+        p = str(1000 + i)
+        page = db.child('book').child(book).child('pages').child(p).get().key()
+        version = db.child('book').child(book).child('pages').child(p).child('version').get().val()
+        volunteer = db.child('book').child(book).child('pages').child(p).child('volunteer').get().val()
+        temp = db.child('book').child(book).child('pages').child(p).child('text').get().val()
         txt = ''
         for line in temp.split('\n'):
             if line != '':
-                txt= txt + line +'\n\n'
+                txt= txt + line.strip() +'\n\n'
     else:
         page = 'invalid page number'
         version = 'invalid'
@@ -62,14 +54,14 @@ def update():
     new = box.get("1.0",tk.END)
     version = version + 1
 
-    db.child('book').child(book).child('final').child(page).update({
-        'data' : new,
+    db.child('book').child(book).child('pages').child(page).update({
+        'text' : new,
         "version" : version,
         "volunteer" : volunteer_new
     })
 
     db.child('book').child(book).child('history').child(page).child( version).update({
-        "data" : new,
+        "text" : new,
         'volunteer' : volunteer_new
     })
     load(i)
@@ -93,15 +85,20 @@ def go():
 
 def combine():
     global book
-    pages = db.child('book').child(book).child('final').get()
+    pages = db.child('book').child(book).child('pages').get()
     l = pages.each()
     txt = ''
     for page in l:
-        txt = txt + db.child('book').child(book).child('final').child(page.key()).child('data').get().val()
+        txt = txt + db.child('book').child(book).child('pages').child(page.key()).child('text').get().val()
         print(page.key())
 
     with open(book+".txt", 'w', encoding='utf-8') as f:
         f.write(txt)
+
+    db.child('book').child(book).child('combine').update({
+        'text' : txt,
+        # 'html' : 'dummy'
+    })
 
 
 

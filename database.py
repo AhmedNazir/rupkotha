@@ -1,14 +1,25 @@
 import pyrebase
+
+config = {
+    'apiKey': "AIzaSyDEaFcnSF0p2AR3JkdyVUgo0Ifno2EfG2M",
+    'authDomain': "rupkotha.firebaseapp.com",
+    'databaseURL': "https://rupkotha.firebaseio.com",
+    'projectId': "rupkotha",
+    'storageBucket': "rupkotha.appspot.com",
+    'messagingSenderId': "403571374607",
+    'appId': "1:403571374607:web:7dac8cb170ab8730"
+}
+
+
 def database():
-    config = {
-        'apiKey': "AIzaSyB0wL9XVyyRrz6RGxA6SM4ycnZTrxLnFe0",
-        'authDomain': "test-74097.firebaseapp.com",
-        'databaseURL': "https://test-74097.firebaseio.com",
-        'projectId': "test-74097",
-        'storageBucket': "",
-        'messagingSenderId': "271652598314",
-        'appId': "1:271652598314:web:e7e3027f4bc9d8d1",
-    }
     firebase = pyrebase.initialize_app(config)
     db = firebase.database()
     return db
+
+
+def getStorage():
+    firebase = pyrebase.initialize_app(config)
+
+    store = firebase.storage()
+    return store
+

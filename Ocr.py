@@ -1,13 +1,15 @@
 import io
 import time
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from init import getService
 
-def ocr(service,inputFile = 'sample.png',projectName =''):
+
+def ocr(service, inputFile='', bookname=''):
     # Image with texts (png, jpg, bmp, gif, pdf)
-    t =time.time()
+    t = time.time()
 
-    inputFilepath =projectName +'\\'+'input'+'\\' + inputFile
-    outputFilePath = projectName + '//'+'output' + '//'+ inputFile[:-4] +'.txt'  # Text file outputted by OCR
+    inputFilepath = 'book'+'\\' + bookname + '\\'+'input'+'\\' + inputFile
+    outputFilePath = 'book'+'\\' + bookname + '\\'+'output' + '\\' +  inputFile[:-4] + '.txt'  # Text file outputted by OCR
 
     mime = 'application/vnd.google-apps.document'
     res = service.files().create(
@@ -15,7 +17,8 @@ def ocr(service,inputFile = 'sample.png',projectName =''):
             'name': inputFile,
             'mimeType': mime
         },
-        media_body=MediaFileUpload(inputFilepath, mimetype=mime, resumable=True)
+        media_body=MediaFileUpload(
+            inputFilepath, mimetype=mime, resumable=True)
     ).execute()
 
     downloader = MediaIoBaseDownload(
@@ -25,7 +28,9 @@ def ocr(service,inputFile = 'sample.png',projectName =''):
 
     done = False
     while done is False:
-        status, done = downloader.next_chunk()
+        _ , done = downloader.next_chunk() # _ == status
 
     service.files().delete(fileId=res['id']).execute()
-    print(inputFile + ' ' + str(time.time() - t ))
+    print(inputFile + ' ' + str(time.time() - t))
+
+    
